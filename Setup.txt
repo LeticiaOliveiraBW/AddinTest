@@ -1,0 +1,36 @@
+rem @echo off
+setlocal
+
+:: %1 = $(Platform)
+:: %2 = $(OutputDir)
+
+set COMPIL32="..\Tools__InnoSetup\iscc.exe"
+set PLATFORM=%1
+set TARGETDIR=%2
+set SIGNTOOL="C:\Program Files (x86)\Windows Kits\8.1\bin\x64\signtool.exe"
+set TIMESTAMPSERVERS=(http://timestamp.verisign.com/scripts/timstamp.dll http://timestamp.comodoca.com/authenticode http://timestamp.globalsign.com/scripts/timestamp.dll http://tsa.starfieldtech.com)
+
+echo Setup - OSS Interface
+
+set options=/cc /dsdir=%TARGETDIR%
+if %PLATFORM% == x64 set options=%options% /dX64
+set options=%options% "/sStandard=$qC:\Program Files (x86)\Windows Kits\8.1\bin\x64\signtool.exe$q sign /a /fd sha256 /v /n $qForsk SAS$q $f"
+
+%COMPIL32% %options% OSSInterface.iss
+
+setlocal enabledelayedexpansion
+
+for %%i in (%TARGETDIR%\*.exe) do (
+   set pathname=%%i
+   set done=
+   for %%s in %TIMESTAMPSERVERS% do if not defined done (
+      echo Timestamping "!pathname!" using %%s...
+      %SIGNTOOL% timestamp /v /t %%s "!pathname!" 2>nul 1>nul
+      if !ERRORLEVEL! equ 0 (
+         set done="yes"
+         echo "!pathname!" using %%s successfully timestamped.
+      )
+   )
+)
+
+endlocal
