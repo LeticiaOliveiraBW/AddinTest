@@ -1,0 +1,115 @@
+Para configurar o DUM:
+Preencher o parser_aliases e o primary_keys dele no banco DUM >
+Caso a tech não exista é necessário inseri-lá na tabela ddl_contents e ddl_contents_language >
+Criar a Tech e o DataImportyType no DUM_WebPage >
+De Save em todos os programas gerados >
+E Inicialize os Programas >
+Entrar no RDP da máquina para verificar se os programas foram gerados >
+Coloque o programa do parser com o novo Parser no RDP >
+Rode o parser local para gerar as tabelas >
+Verifique as tabelas geradas se estão corretas >
+Rode o sync indo em DataImportyType, escrevendo "all" do lado de Complete Sync Database e clique no botão>
+Rode o parser novamente para ver se os dados foram enviados para o servidor.
+
+Para configurar o NetChart:
+Sem StreamLine:
+Abrir o Código do netchart >
+Configurar o banco para o projeto >
+Configurar a global_versioned, adicionando na função "Define[Project]Variables" em application(“techsList”)” a nova Tech e inserir algo como "application(“nokia_oss_param_db_oraclepcrf”) = “NOME DO BANCO" >
+Em Public Enum NetchartTechnology adicionar a nova Tech, caso não exista >
+Inserir um "Case TechNova" caso não exista na função: deprecatedSetTechnology na project >
+Setar os valores necessários de acordo com : O que fala nas váriaveis, lembrando que para gerar o banco de o_cells tem que acrescentar a Tech e rodar para criar o banco o_cells_vendortech e dar sync, preenchendo "o_cells_vendortech" no data importtype do DUM>
+Criar uma pasta em "[repositório do netchart]\Structures\treeview" da nova Tech *>
+Criar os arquivos dentro desta pasta seguindo mesmo padrão imposto >
+Preencher no arquvio "treeViewProviders" a nova Tech com as váriaveis de acordo com o padrão estabelecido >
+Rodar o MetaData(Atualiza a tabela de information.schema com as novas tabelas) >
+Rodar tudo do FillCoord >
+Rodar o NewTech(Support_Page.aspx) >
+Rodar Update Regions >
+Rodar o netchart, na página fill_cood e executar todos os passos para aparecer a Tech nova na interface >
+
+Para config com o streamline:
+Abrir o Código do netchart >
+Configurar o banco para o projeto >
+Configurar a netchart_projects e netchart_global de acordo com o que for necessário no servidor e depois replicar no DUM>
+Criar uma pasta em "[repositório do netchart]\Structures\treeview" da nova Tech *>
+Criar os arquivos dentro desta pasta seguindo mesmo padrão imposto >
+Preencher no arquvio "treeViewProviders" a nova Tech com as váriaveis de acordo com o padrão estabelecido >
+Rodar o MetaData(Atualiza a tabela de information.schema com as novas tabelas) >
+Rodar tudo do FillCoord >
+Rodar Configure New Technology >
+Rodar Update Regions
+
+
+LEMBRAR: Caso for tech já existe fazer no local primeiro e depois mandar tudo para lá
+
+
+TREE VIEW:
+Configurar tree_view o que tiver em %% tem que ser igual ao que está configurado na Projects Ex:
+<element name="PORT" id="PORT">
+Case Sensitive e tem que ser igualzinho a project
+<group_name>SITE</group_name>
+É o que vai aparecer antes de expandir a tree_view
+<name>SITE:  %SITE% - %SITENAME%</name>
+Expandiu vai aparecer esse nome
+<populate_item>
+      <name>SITE</name>
+      <id>SITE</id>
+    </populate_item>
+name é o que está em é dado como Name e id é a coluna da tabela de referência
+<PARAM_TABLES idInTable="SITEID=%site%" usedIn="show_param,checks,param_compare,download_param,param_change">
+Dentro dessa TAG é importante que os id's estejam distribuidos em: SITEID(Igual a tabela de PARAM) e %site% igual ao que esteja na project
+
+Ex de Netchart_Projects junto ao arquivo de tree_view(Passar para o banco para visualizar mais fácil):
+nokiatx	nokiatx	cellElement	PORT	String
+NOKIA___TX___CM___XML___API	nokiatx	cellOcellsCID		String
+NOKIA___TX___CM___XML___API	nokiatx	cellOcellsParamId	port_Name	String
+NOKIA___TX___CM___XML___API	nokiatx	cellOcellsStatsId	port_Name	String
+NOKIA___TX___CM___XML___API	nokiatx	cellParamId	portId	String
+NOKIA___TX___CM___XML___API	nokiatx	cellParamName		String
+NOKIA___TX___CM___XML___API	nokiatx	cellParamTable	equipment_physicalport	String
+NOKIA___TX___PM___XML___API	nokiatx	cellStatsId	card_port	String
+NOKIA___TX___PM___XML___API	nokiatx	cellStringStatsIds	False	Boolean
+nokiatx	nokiatx	controllerElement	SITE	String
+NOKIA___TX___CM___XML___API	nokiatx	controllerNameToChange		String
+NOKIA___TX___CM___XML___API	nokiatx	controllerOcellsParamId	site	String
+NOKIA___TX___CM___XML___API	nokiatx	controllerOCellsStatsId	site_name	String
+NOKIA___TX___CM___XML___API	nokiatx	controllerParamId	SiteId	String
+NOKIA___TX___CM___XML___API	nokiatx	controllerParamName	SiteName	String
+NOKIA___TX___CM___XML___API	nokiatx	controllerParamTable	equipment_physicalport	String
+NOKIA___TX___PM___XML___API	nokiatx	controllerStatsId	monitoredObjectSiteName	String
+NOKIA___TX___CM___XML___API	nokiatx	controllerStringParamIds	True	Boolean
+NOKIA___TX___PM___XML___API	nokiatx	controllerStringStatsIds	True	Boolean
+nokiatx	nokiatx	hasCellElement	True	Boolean
+nokiatx	nokiatx	hasRehostedRegion	False	Boolean
+NOKIA___TX___CM___XML___API	nokiatx	hasSiteAtCellTable	True	Boolean
+nokiatx	nokiatx	hasSiteElement	True	Boolean
+NOKIA___TX___CM___XML___API	nokiatx	hasSiteTableFieldTrx	False	Boolean
+NOKIA___TX___PM___XML___API	nokiatx	isCellGIDUnique	False	Boolean
+NOKIA___TX___PM___XML___API	nokiatx	isCellStatsIDUnique	False	Boolean
+NOKIA___TX___PM___XML___API	nokiatx	isControllerGIDUnique	False	Boolean
+NOKIA___TX___PM___XML___API	nokiatx	isControllerStatsIDUnique	False	Boolean
+NOKIA___TX___PM___XML___API	nokiatx	isSiteGIDUnique	False	Boolean
+NOKIA___TX___PM___XML___API	nokiatx	isSiteStatsIDUnique	False	Boolean
+NOKIA___TX___CM___XML___API	nokiatx	lacParamName		String
+nokiatx	nokiatx	objectTypeNameColumn	affectedobject	String
+NOKIA___TX___PM___XML___API	nokiatx	periodDuration	period_duration	String
+NOKIA___TX___PM___XML___API	nokiatx	periodDurationInSeconds	False	Boolean
+NOKIA___TX___PM___XML___API	nokiatx	periodStartTime	PERIOD_START_TIME	String
+nokiatx	nokiatx	siteElement	CARDSLOT	String
+NOKIA___TX___CM___XML___API	nokiatx	siteOcellsParamId	CardSlot_Name	String
+NOKIA___TX___CM___XML___API	nokiatx	siteOCellsStatsId	CardSlot_Name	String
+NOKIA___TX___CM___XML___API	nokiatx	siteParamId	cardSlotId	String
+NOKIA___TX___CM___XML___API	nokiatx	siteParamName		String
+NOKIA___TX___CM___XML___API	nokiatx	siteParamTable	equipment_physicalport	String
+NOKIA___TX___PM___XML___API	nokiatx	siteStatsId	slot	String
+NOKIA___TX___PM___XML___API	nokiatx	siteStatsIdExist	True	Boolean
+NOKIA___TX___PM___XML___API	nokiatx	siteStringStatsIds	False	Boolean
+NOKIA___TX___PM___XML___API	nokiatx	statsTable	tdmequipment_e1currentstats24hrout	String
+NOKIA___TX___CM___XML___API	nokiatx	stringParamIds	True	Boolean
+NOKIA___TX___PM___XML___API	nokiatx	stringStatsIds	True	Boolean
+nokiatx	nokiatx	technologySufix	TX	String
+nokiatx	nokiatx	techSource	MW	String
+NOKIA___TX___CM___XML___API	nokiatx	trxParamId		String
+NOKIA___TX___PM___XML___API	nokiatx	trxStatsId		String
+NOKIA___TX___CM___XML___API	nokiatx	trxTable		String
