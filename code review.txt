@@ -1,0 +1,17 @@
+                       Variável sem tipo:
+Dim [\w\d\\_]* (?!As)
+
+For sem tipo
+For [\w\d\\_]* (?!As)To
+
+For Each sem tipo
+For Each [\w\d\\_]* (?!As)In
+
+Function sem tipo
+Public (Shared\s)*Function (?<funcName>[\w\d\\_]*)\(([\w\,\\_\s\.]*)\)\s(?!As)
+
+
+
+Ficar só com o nome da coluna em um create table
+`(?<column>[\w]*)` \w*\(*\w*\)*\s*(NOT NULL|NOT)*\s*(DEFAULT)*\s*(NULL|'-1'|'0000-00-00')*,
+replace por \1
